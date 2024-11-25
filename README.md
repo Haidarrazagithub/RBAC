@@ -92,7 +92,7 @@ The repository includes a Postman collection for testing the API. You can find i
 
 3. **Roles and Permissions**
     - `GET /user_roles/`: List all roles.
-    - `GET /permissions/`: List permissions for a role.
+    - `GET /permissions/`: List permissions.
 
 ### Example Request: User Creation
 ```json
