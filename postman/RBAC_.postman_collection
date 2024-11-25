@@ -1,0 +1,719 @@
+{
+	"info": {
+		"_postman_id": "9100a536-4c95-40f8-9392-4c5a899fa53f",
+		"name": "OTA_Python",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19617415"
+	},
+	"item": [
+		{
+			"name": "OTA_LOGIN",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"console.log(\"starting of script\")\r",
+							"var mtoken = \"\"\r",
+							"var userId = \"\"\r",
+							"\r",
+							"mtoken = pm.response.json().access_token\r",
+							"userId = pm.response.json().user_id\r",
+							"\r",
+							"pm.collectionVariables.set('Ota_token',mtoken)\r",
+							"pm.collectionVariables.set('mUserId',userId)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const crypto = require('crypto-js');\r",
+							"var ehieUserName= pm.collectionVariables.get(\"username\");\r",
+							"var ehiePassword = pm.collectionVariables.get(\"password\");\r",
+							"const utf8Str = crypto.enc.Utf8.parse(ehieUserName +\":\"+ehiePassword);\r",
+							"const encodedCredString = crypto.enc.Base64.stringify(utf8Str);\r",
+							"//console.log(\"Encoded String  \" + str2);\r",
+							"pm.collectionVariables.set(\"encodedcred\",encodedCredString);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{encodedcred}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "otp_code",
+							"value": "912970",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/otau/auth/login/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"otau",
+						"auth",
+						"login",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OTA_LOgout",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Ota_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI5NzY0NDYwLCJpYXQiOjE3Mjk3NjA4NjAsImp0aSI6IjE4MGM3YWIxOTM4MjQ3NTNhNDFjN2NiMWUwOWEwMWNkIiwidXNlcl9pZCI6Mn0.mNCmlqBvhKpd-scP_jXgkk6FL81TQe3he8pt-KWRxJI",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "refresh_token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI5Nzc0MTkyLCJpYXQiOjE3Mjk3NzA1OTIsImp0aSI6IjIwNDg0NmE1NmUxMTRkZGU5NDc3YjBmMmRhM2JhZmMzIiwidXNlcl9pZCI6Mn0.j-tqHzJvBs2oTqopZm-FFPF1sU2ZiNjqWcp-lW73608",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/otau/auth/logout/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"otau",
+						"auth",
+						"logout",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user-roles",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Ota_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/otau/auth/user_roles/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"otau",
+						"auth",
+						"user_roles",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user-create",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Ota_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"dev1@inst.com\",\r\n\"first_name\":\"developer\",\r\n\"last_name\":\"django\",\r\n\"password\":\"Testabc123#\",\r\n\"role\":3}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/otau/auth/users/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"otau",
+						"auth",
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user-list",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Ota_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/otau/auth/users/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"otau",
+						"auth",
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user-update",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Ota_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"user_id\":3,\r\n\"role\":3\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/otau/auth/users/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"otau",
+						"auth",
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user-Delete",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Ota_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "user_id",
+							"value": "2",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/otau/auth/users/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"otau",
+						"auth",
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ota_reset_password",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI5NzY0NDYwLCJpYXQiOjE3Mjk3NjA4NjAsImp0aSI6IjE4MGM3YWIxOTM4MjQ3NTNhNDFjN2NiMWUwOWEwMWNkIiwidXNlcl9pZCI6Mn0.mNCmlqBvhKpd-scP_jXgkk6FL81TQe3he8pt-KWRxJI",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "refresh_token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI5Nzc0MTkyLCJpYXQiOjE3Mjk3NzA1OTIsImp0aSI6IjIwNDg0NmE1NmUxMTRkZGU5NDc3YjBmMmRhM2JhZmMzIiwidXNlcl9pZCI6Mn0.j-tqHzJvBs2oTqopZm-FFPF1sU2ZiNjqWcp-lW73608",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "email",
+							"value": "Haidar2@inst.com",
+							"type": "text"
+						},
+						{
+							"key": "otp_code",
+							"value": "748765",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "new_password",
+							"value": "Testabc123#",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/otau/auth/reset_password/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"otau",
+						"auth",
+						"reset_password",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user-self password with id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Ota_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "otp_code",
+							"value": "266240",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "new_password",
+							"value": "Testabc123#",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/otau/auth/users/3/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"otau",
+						"auth",
+						"users",
+						"3",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "permissions",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Ota_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI5NzY0NDYwLCJpYXQiOjE3Mjk3NjA4NjAsImp0aSI6IjE4MGM3YWIxOTM4MjQ3NTNhNDFjN2NiMWUwOWEwMWNkIiwidXNlcl9pZCI6Mn0.mNCmlqBvhKpd-scP_jXgkk6FL81TQe3he8pt-KWRxJI",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/otau/auth/permissions/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"otau",
+						"auth",
+						"permissions",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upload-create||with developer",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Ota_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "productName",
+							"value": "Colpo",
+							"type": "text"
+						},
+						{
+							"key": "productDescription",
+							"value": "for colposcopy",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/otau/auth/only_developer/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"otau",
+						"auth",
+						"only_developer",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "realease-create||with manager",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Ota_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "productName",
+							"value": "Colpo",
+							"type": "text"
+						},
+						{
+							"key": "productDescription",
+							"value": "for colposcopy",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/otau/auth/only_manager/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"otau",
+						"auth",
+						"only_manager",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "work ADMIN||with all perm",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Ota_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "productName",
+							"value": "Colpo",
+							"type": "text"
+						},
+						{
+							"key": "productDescription",
+							"value": "for colposcopy",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/otau/auth/only_admin/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"otau",
+						"auth",
+						"only_admin",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "Ota_token",
+			"value": "123",
+			"type": "string"
+		},
+		{
+			"key": "mUserId",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "username",
+			"value": "admin@dmin.com",
+			"type": "string"
+		},
+		{
+			"key": "password",
+			"value": "admin!",
+			"type": "string"
+		},
+		{
+			"key": "encodedcred",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "mEncodedCred",
+			"value": ""
+		}
+	]
+}
